@@ -4,7 +4,10 @@ const AdminJSMongoose = require("@adminjs/mongoose");
 const User = require("../models/user");
 const Data = require("../models/data");
 const { after, before } = require("./actions/password");
-const componentLoader = require("./components/componentsLoader");
+const {
+  componentLoader,
+  Components,
+} = require("./components/componentsLoader");
 const localeOptions = require("./i18n/options");
 
 AdminJS.registerAdapter({
@@ -66,6 +69,15 @@ const adminOptions = {
     withMadeWithLove: false,
   },
   locale: localeOptions,
+  pages: {
+    "Średnia z danych": {
+      handler: async () => {
+        return { data: "dupa" };
+      },
+      component: Components.DataAverage,
+      icon: "ChartAverage",
+    },
+  },
 };
 
 const adminjs = new AdminJS(adminOptions);
