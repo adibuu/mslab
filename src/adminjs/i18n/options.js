@@ -22,7 +22,7 @@ const options = {
     },
     labels: {
       navigation: "Menu",
-      pages: "Opcje",
+      pages: "Funkcje",
       selectedRecords: "Wybrano ({{selected}})",
       filters: "Filtry",
       adminVersion: "Admin: {{version}}",
