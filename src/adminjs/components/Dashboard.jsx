@@ -9,6 +9,7 @@ import {
   Text,
 } from "@adminjs/design-system";
 import readXlsxFile from "read-excel-file";
+import axios from "axios";
 
 const API_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
@@ -48,6 +49,10 @@ const excelSchema = {
   },
   SMB: {
     prop: "smb",
+    type: String,
+  },
+  LKS: {
+    prop: "lks",
     type: String,
   },
   OLD: {
@@ -97,18 +102,31 @@ const Dashboard = () => {
   });
 
   const onUpload = async () => {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const { rows } = await readXlsxFile(fileInputRef.current.files?.[0], {
-      schema: excelSchema,
-    });
+      const { rows } = await readXlsxFile(fileInputRef.current.files?.[0], {
+        schema: excelSchema,
+      });
 
-    fileInputRef.current.value = null;
-    setLoading(false);
-    setMessage({
-      error: false,
-      success: true,
-    });
+      const res = await axios.post(`${API_URL}/data`, rows);
+
+      if (res.status === 200) {
+        fileInputRef.current.value = null;
+        setLoading(false);
+        setMessage({
+          error: false,
+          success: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      setMessage({
+        error: true,
+        success: false,
+      });
+    }
   };
 
   return (

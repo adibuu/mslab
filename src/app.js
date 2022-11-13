@@ -3,13 +3,14 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 const { limiter } = require("./config/rateLimits");
-require("./db/db-connection");
 const bcrypt = require("bcryptjs");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
+require("./db/db-connection");
 const MongoStore = require("connect-mongo");
 const AdminJSExpress = require("@adminjs/express");
 const User = require("./models/user");
 const adminjs = require("./adminjs");
+const dataRouter = require("./routers/data");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -43,9 +44,11 @@ const routerAdminJS = AdminJSExpress.buildAuthenticatedRouter(
 );
 
 app.use(adminjs.options.rootPath, routerAdminJS);
+app.use(express.json());
 app.use(helmet());
 app.use(cors());
 app.use(limiter);
+app.use(dataRouter);
 
 app.listen(PORT, () =>
   console.log(
