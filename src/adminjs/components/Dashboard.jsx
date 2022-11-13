@@ -1,5 +1,5 @@
 import React from "react";
 
-const Dashboard = () => <center></center>;
+const Dashboard = () => <div></div>;
 
 export default Dashboard;

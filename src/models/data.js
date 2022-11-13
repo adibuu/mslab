@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dataSchema = new mongoose.Schema({
   ml: {
     type: Number,
-    required: true,
+    required: [true, "Pole jest wymagane"],
   },
   pktSkp: {
     type: String,
@@ -16,7 +16,7 @@ const dataSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
-    required: true,
+    required: [true, "Pole jest wymagane"],
   },
   fat: {
     type: String,
@@ -32,11 +32,11 @@ const dataSchema = new mongoose.Schema({
   },
   lks: {
     type: Number,
-    required: true,
+    required: [true, "Pole jest wymagane"],
   },
   old: {
     type: Number,
-    required: true,
+    required: [true, "Pole jest wymagane"],
   },
   pzam: {
     type: String,

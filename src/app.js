@@ -7,54 +7,12 @@ require("./db/db-connection");
 const bcrypt = require("bcryptjs");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 const MongoStore = require("connect-mongo");
-const AdminJS = require("adminjs");
 const AdminJSExpress = require("@adminjs/express");
-const AdminJSMongoose = require("@adminjs/mongoose");
 const User = require("./models/user");
-const Data = require("./models/data");
-const { after, before } = require("./adminjs/actions/password");
-
-AdminJS.registerAdapter({
-  Resource: AdminJSMongoose.Resource,
-  Database: AdminJSMongoose.Database,
-});
+const adminjs = require("./adminjs");
 
 const PORT = process.env.PORT || 3001;
 const app = express();
-
-const adminOptions = {
-  resources: [
-    {
-      resource: User,
-      options: {
-        properties: {
-          encryptedPassword: {
-            isVisible: false,
-          },
-          password: {
-            type: "password",
-            isVisible: {
-              list: false,
-              edit: true,
-              filter: false,
-              show: false,
-            },
-          },
-        },
-        actions: {
-          new: {
-            after: after,
-            before: before,
-          },
-          edit: { after: after, before: before },
-        },
-      },
-    },
-    Data,
-  ],
-};
-
-const adminjs = new AdminJS(adminOptions);
 
 const routerAdminJS = AdminJSExpress.buildAuthenticatedRouter(
   adminjs,
