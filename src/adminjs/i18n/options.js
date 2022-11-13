@@ -43,11 +43,11 @@ const options = {
       anyForbiddenError: "Nie możesz wykonać tej akcji",
       successfullyCreated: "Pomyślnie utworzono nowy rekord",
       bulkDeleteError:
-        "Wystąpił problem podczas usuwania wielu rekordów, Spróbuj ponowanie lub skontaktuj się z administratorem",
+        "Wystąpił problem podczas usuwania wielu rekordów, Spróbuj ponownie lub skontaktuj się z administratorem",
       errorFetchingRecords:
-        "Wystąpił problem podczas pobierania danych z bazy, Spróbuj ponowanie lub skontaktuj się z administratorem",
+        "Wystąpił problem podczas pobierania danych z bazy, Spróbuj ponownie lub skontaktuj się z administratorem",
       errorFetchingRecord:
-        "Wystąpił problem podczas pobierania danego rekordu z bazy, Spróbuj ponowanie lub skontaktuj się z administratorem",
+        "Wystąpił problem podczas pobierania danego rekordu z bazy, Spróbuj ponownie lub skontaktuj się z administratorem",
       noRecordsSelected: "Nie wybrałeś żadnych rekordów",
       theseRecordsWillBeRemoved: "Zaznaczony rekord zostanie usunięty",
       theseRecordsWillBeRemoved_plural: "Zaznaczone rekordy zostaną usunięte",
