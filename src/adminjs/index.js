@@ -51,6 +51,10 @@ const adminOptions = {
       resource: Data,
       options: {
         navigation: sidebarGroups.data,
+        sort: {
+          sortBy: "date",
+          direction: "desc",
+        },
       },
     },
   ],
