@@ -12,6 +12,7 @@ const AdminJSExpress = require("@adminjs/express");
 const AdminJSMongoose = require("@adminjs/mongoose");
 const User = require("./models/user");
 const Data = require("./models/data");
+const { after, before } = require("./adminjs/actions/password");
 
 AdminJS.registerAdapter({
   Resource: AdminJSMongoose.Resource,
@@ -22,7 +23,35 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 const adminOptions = {
-  resources: [User, Data],
+  resources: [
+    {
+      resource: User,
+      options: {
+        properties: {
+          encryptedPassword: {
+            isVisible: false,
+          },
+          password: {
+            type: "password",
+            isVisible: {
+              list: false,
+              edit: true,
+              filter: false,
+              show: false,
+            },
+          },
+        },
+        actions: {
+          new: {
+            after: after,
+            before: before,
+          },
+          edit: { after: after, before: before },
+        },
+      },
+    },
+    Data,
+  ],
 };
 
 const adminjs = new AdminJS(adminOptions);
@@ -33,8 +62,7 @@ const routerAdminJS = AdminJSExpress.buildAuthenticatedRouter(
     authenticate: async (login, password) => {
       const user = await User.findOne({ login });
       if (user) {
-        //const matched = await bcrypt.compare(password, user.encryptedPassword);
-        const matched = password === user.encryptedPassword;
+        const matched = await bcrypt.compare(password, user.encryptedPassword);
         if (matched) {
           return Promise.resolve(user);
         }
