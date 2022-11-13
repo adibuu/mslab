@@ -5,6 +5,7 @@ const User = require("../models/user");
 const Data = require("../models/data");
 const { after, before } = require("./actions/password");
 const componentLoader = require("./components/componentsLoader");
+const localeOptions = require("./i18n/options");
 
 AdminJS.registerAdapter({
   Resource: AdminJSMongoose.Resource,
@@ -64,6 +65,7 @@ const adminOptions = {
     logo: null,
     withMadeWithLove: false,
   },
+  locale: localeOptions,
 };
 
 const adminjs = new AdminJS(adminOptions);

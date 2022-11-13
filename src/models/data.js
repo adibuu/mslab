@@ -47,9 +47,6 @@ const dataSchema = new mongoose.Schema({
   sh: {
     type: String,
   },
-  pzam: {
-    type: String,
-  },
   urea: {
     type: String,
   },
