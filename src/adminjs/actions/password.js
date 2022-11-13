@@ -12,6 +12,14 @@ const after = async (response) => {
 
 const before = async (request) => {
   if (request.payload.password) {
+    if (!validator.isEmail(request.payload.email)) {
+      throw new ValidationError({
+        email: {
+          message: "Niepoprawny adres email",
+        },
+      });
+    }
+
     if (!validator.isStrongPassword(request.payload.password)) {
       throw new ValidationError({
         password: {
@@ -21,12 +29,12 @@ const before = async (request) => {
       });
     }
 
-    const loginExists = await User.findOne({ login: request.payload.login });
+    const emailExists = await User.findOne({ email: request.payload.email });
 
-    if (loginExists) {
+    if (emailExists) {
       throw new ValidationError({
-        login: {
-          message: "Ten login jest już zajęty!",
+        email: {
+          message: "Ten email jest już zajęty",
         },
       });
     }

@@ -17,8 +17,8 @@ const app = express();
 const routerAdminJS = AdminJSExpress.buildAuthenticatedRouter(
   adminjs,
   {
-    authenticate: async (login, password) => {
-      const user = await User.findOne({ login });
+    authenticate: async (email, password) => {
+      const user = await User.findOne({ email });
       if (user) {
         const matched = await bcrypt.compare(password, user.encryptedPassword);
         if (matched) {

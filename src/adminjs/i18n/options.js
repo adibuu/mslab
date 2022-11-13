@@ -94,7 +94,7 @@ const options = {
     resources: {
       User: {
         properties: {
-          login: "Login",
+          email: "Email",
           password: "Hasło",
         },
       },
