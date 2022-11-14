@@ -18,26 +18,16 @@ exports.addData = async (req, res, next) => {
   }
 };
 
-exports.calculateLks = async (req, res, next) => {
+exports.getData = async (req, res, next) => {
   try {
-    const { ml, date } = req.body;
-
-    const data = await Data.find({
-      ml: req.body.ml,
-      $or: [
-        {
-          date: {
-            $lt: req.body.date,
-          },
-        },
-        {
-          date: req.body.date,
-        },
-      ],
-    })
-      .sort("-date")
-      .limit(6)
-      .exec();
+    const data = await Data.find(
+      {},
+      {
+        _id: 0,
+        ml: 1,
+        surname: 1,
+      }
+    );
 
     return res.status(200).send(data);
   } catch (error) {
@@ -47,11 +37,71 @@ exports.calculateLks = async (req, res, next) => {
   }
 };
 
+exports.calculateLks = async (req, res, next) => {
+  try {
+    const date = req.body.date;
+    const ml = req.body.ml;
+
+    const data = await Data.find({
+      ml: ml,
+      $or: [
+        {
+          date: {
+            $lt: date,
+          },
+        },
+        {
+          date: date,
+        },
+      ],
+    })
+      .sort("-date")
+      .limit(6)
+      .exec();
+
+    const sumLKS = data?.reduce((acc, data) => {
+      return acc + data.lks;
+    }, 0);
+
+    const avarage = sumLKS / 6;
+
+    return res.status(200).send({ avarage });
+  } catch (error) {
+    if (!error.statusCode) error.statusCode = 500;
+
+    next(error);
+  }
+};
+
 exports.calculateOld = async (req, res, next) => {
   try {
-    const { ml, date } = req.body;
+    const date = req.body.date;
+    const ml = req.body.ml;
 
-    return res.status(200).send();
+    const data = await Data.find({
+      ml: ml,
+      $or: [
+        {
+          date: {
+            $lt: date,
+          },
+        },
+        {
+          date: date,
+        },
+      ],
+    })
+      .sort("-date")
+      .limit(4)
+      .exec();
+
+    const sumOld = data?.reduce((acc, data) => {
+      return acc + data.old;
+    }, 0);
+
+    const avarage = sumOld / 4;
+
+    return res.status(200).send({ avarage });
   } catch (error) {
     if (!error.statusCode) error.statusCode = 500;
 

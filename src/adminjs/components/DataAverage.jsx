@@ -7,13 +7,10 @@ import {
   DatePicker,
   Header,
 } from "@adminjs/design-system";
-import { ApiClient } from "adminjs";
 import Select from "react-select";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import pl from "date-fns/locale/pl";
-
-const api = new ApiClient();
 
 const API_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
@@ -39,24 +36,28 @@ const DataAverage = () => {
     handleSubmit: handleSubmitOLD,
     formState: { errors: errorsOLD, isSubmitting: isSubmittingOLD },
   } = useForm();
+  const [avarageLKS, setAvarageLKS] = useState({
+    success: null,
+    error: false,
+  });
+  const [avarageOLD, setAvarageOLD] = useState({
+    success: null,
+    error: false,
+  });
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await api.resourceAction({
-        resourceId: "Data",
-        actionName: "list",
-      });
+      const res = await axios.get(`${API_URL}/data`);
 
-      setMl([
-        ...new Set(
-          data?.data?.records
-            ?.map((record) => ({
-              ml: record?.params?.ml,
-              surname: record?.params?.surname,
-            }))
-            ?.sort((a, b) => a.ml - b.ml)
-        ),
-      ]);
+      setMl(
+        [...new Set(res.data.map(({ ml }) => ml))]
+          .map((e) => res.data.find(({ ml }) => ml == e))
+          ?.map((document) => ({
+            ml: document?.ml,
+            surname: document?.surname,
+          }))
+          ?.sort((a, b) => a.ml - b.ml)
+      );
 
       setLoading(false);
     };
@@ -65,19 +66,44 @@ const DataAverage = () => {
   }, []);
 
   const onSubmitLKS = async (data) => {
-    console.log(data);
+    try {
+      const res = await axios.post(`${API_URL}/data/lks`, {
+        date: data?.dateLKS,
+        ml: data?.mlLKS?.ml,
+      });
 
-    const res = await axios.post(`${API_URL}/data/lks`, {
-      date: data?.dateLKS,
-      ml: data?.mlLKS?.ml,
-    });
-
-    if (res.status === 200) {
-      console.log(res.data);
+      if (res.status === 200)
+        setAvarageLKS({
+          error: false,
+          success: res.data,
+        });
+    } catch (error) {
+      setAvarageLKS({
+        success: null,
+        error: true,
+      });
     }
   };
 
-  const onSubmitOLD = async (data) => console.log(data);
+  const onSubmitOLD = async (data) => {
+    try {
+      const res = await axios.post(`${API_URL}/data/old`, {
+        date: data?.dateOLD,
+        ml: data?.mlOLD?.ml,
+      });
+
+      if (res.status === 200)
+        setAvarageOLD({
+          error: false,
+          success: res.data,
+        });
+    } catch (error) {
+      setAvarageOLD({
+        success: null,
+        error: true,
+      });
+    }
+  };
 
   return (
     <Box variant="grey">
@@ -143,6 +169,20 @@ const DataAverage = () => {
                   Oblicz
                 </Button>
               )}
+
+              {avarageLKS.success && (
+                <Text
+                  fontSize={"xl"}
+                  marginTop={"30px"}
+                  fontWeight="bolder"
+                >{`Wynik: ${avarageLKS.success?.avarage}`}</Text>
+              )}
+              {avarageLKS.error && (
+                <Text color="red" fontSize={"xl"} marginTop={"30px"}>
+                  Wystąpił błąd! Spróbuj ponownie lub skontaktuj się z
+                  administratorem.
+                </Text>
+              )}
             </Box>
           </form>
 
@@ -203,6 +243,20 @@ const DataAverage = () => {
                 <Button marginTop={"20px"} type="submit">
                   Oblicz
                 </Button>
+              )}
+
+              {avarageOLD.success && (
+                <Text
+                  fontSize={"xl"}
+                  marginTop={"30px"}
+                  fontWeight="bolder"
+                >{`Wynik: ${avarageOLD.success?.avarage}`}</Text>
+              )}
+              {avarageOLD.error && (
+                <Text color="red" fontSize={"xl"} marginTop={"30px"}>
+                  Wystąpił błąd! Spróbuj ponownie lub skontaktuj się z
+                  administratorem.
+                </Text>
               )}
             </Box>
           </form>
