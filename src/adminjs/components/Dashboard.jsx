@@ -103,6 +103,10 @@ const Dashboard = () => {
 
   const onUpload = async () => {
     try {
+      setMessage({
+        error: false,
+        success: false,
+      });
       setLoading(true);
 
       const { rows } = await readXlsxFile(fileInputRef.current.files?.[0], {
