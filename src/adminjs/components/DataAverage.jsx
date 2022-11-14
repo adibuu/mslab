@@ -15,6 +15,9 @@ import pl from "date-fns/locale/pl";
 
 const api = new ApiClient();
 
+const API_URL =
+  process.env.NODE_ENV === "production" ? "" : "http://localhost:3001";
+
 const DataAverage = () => {
   const [loading, setLoading] = useState(true);
   const [ml, setMl] = useState();
@@ -61,7 +64,18 @@ const DataAverage = () => {
     fetchData();
   }, []);
 
-  const onSubmitLKS = async (data) => console.log(data);
+  const onSubmitLKS = async (data) => {
+    console.log(data);
+
+    const res = await axios.post(`${API_URL}/data/lks`, {
+      date: data?.dateLKS,
+      ml: data?.mlLKS?.ml,
+    });
+
+    if (res.status === 200) {
+      console.log(res.data);
+    }
+  };
 
   const onSubmitOLD = async (data) => console.log(data);
 
