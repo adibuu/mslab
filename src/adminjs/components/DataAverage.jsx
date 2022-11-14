@@ -18,18 +18,13 @@ const api = new ApiClient();
 const DataAverage = () => {
   const [loading, setLoading] = useState(true);
   const [ml, setMl] = useState();
-  const [surnames, setSurnames] = useState();
   const mlOptions = useMemo(
-    () => ml?.map((ml) => ({ value: ml, label: ml })),
-    [ml]
-  );
-  const surnamesOptions = useMemo(
     () =>
-      surnames?.map((surname) => ({
-        value: surname,
-        label: surname,
+      ml?.map((ml) => ({
+        value: ml,
+        label: `${ml?.ml} ${ml?.surname ? `(${ml?.surname})` : ""}`,
       })),
-    [surnames]
+    [ml]
   );
   const {
     control: controlLKS,
@@ -52,16 +47,11 @@ const DataAverage = () => {
       setMl([
         ...new Set(
           data?.data?.records
-            ?.map((record) => record?.params?.ml)
-            ?.sort((a, b) => a - b)
-        ),
-      ]);
-
-      setSurnames([
-        ...new Set(
-          data?.data?.records
-            ?.map((record) => record?.params?.surname)
-            ?.sort((a, b) => a?.localeCompare(b))
+            ?.map((record) => ({
+              ml: record?.params?.ml,
+              surname: record?.params?.surname,
+            }))
+            ?.sort((a, b) => a.ml - b.ml)
         ),
       ]);
 
@@ -112,6 +102,7 @@ const DataAverage = () => {
               <Controller
                 control={controlLKS}
                 name="mlLKS"
+                rules={{ required: true }}
                 render={({ field: { onChange, value, ref } }) => (
                   <Select
                     onChange={(selectedValue) => onChange(selectedValue.value)}
@@ -126,35 +117,18 @@ const DataAverage = () => {
                   />
                 )}
               />
-              {surnames?.[0] && (
-                <>
-                  <Text marginTop={"20px"} marginBottom="5px" fontSize={"lg"}>
-                    Nazwisko
-                  </Text>
-                  <Controller
-                    control={controlLKS}
-                    name="surnameLKS"
-                    render={({ field: { onChange, value, ref } }) => (
-                      <Select
-                        onChange={(selectedValue) =>
-                          onChange(selectedValue.value)
-                        }
-                        value={surnamesOptions.find((c) => value === c.value)}
-                        ref={ref}
-                        options={surnamesOptions}
-                        placeholder="Wybierz..."
-                        isClearable
-                        noOptionsMessage={({ inputValue }) =>
-                          !inputValue ? noOptionsText : "Brak opcji"
-                        }
-                      />
-                    )}
-                  />
-                </>
+              {errorsLKS.mlLKS && (
+                <Text mt={3} color="red">
+                  Pole wymagane
+                </Text>
               )}
-              <Button marginTop={"20px"} type="submit">
-                Oblicz
-              </Button>
+              {isSubmittingLKS ? (
+                <Loader />
+              ) : (
+                <Button marginTop={"20px"} type="submit">
+                  Oblicz
+                </Button>
+              )}
             </Box>
           </form>
 
@@ -189,6 +163,7 @@ const DataAverage = () => {
               <Controller
                 control={controlOLD}
                 name="mlOLD"
+                rules={{ required: true }}
                 render={({ field: { onChange, value, ref } }) => (
                   <Select
                     onChange={(selectedValue) => onChange(selectedValue.value)}
@@ -203,35 +178,18 @@ const DataAverage = () => {
                   />
                 )}
               />
-              {surnames?.[0] && (
-                <>
-                  <Text marginTop={"20px"} marginBottom="5px" fontSize={"lg"}>
-                    Nazwisko
-                  </Text>
-                  <Controller
-                    control={controlOLD}
-                    name="surnameOLD"
-                    render={({ field: { onChange, value, ref } }) => (
-                      <Select
-                        onChange={(selectedValue) =>
-                          onChange(selectedValue.value)
-                        }
-                        value={surnamesOptions.find((c) => value === c.value)}
-                        ref={ref}
-                        options={surnamesOptions}
-                        placeholder="Wybierz..."
-                        isClearable
-                        noOptionsMessage={({ inputValue }) =>
-                          !inputValue ? noOptionsText : "Brak opcji"
-                        }
-                      />
-                    )}
-                  />
-                </>
+              {errorsOLD.mlOLD && (
+                <Text mt={3} color="red">
+                  Pole wymagane
+                </Text>
               )}
-              <Button marginTop={"20px"} type="submit">
-                Oblicz
-              </Button>
+              {isSubmittingOLD ? (
+                <Loader />
+              ) : (
+                <Button marginTop={"20px"} type="submit">
+                  Oblicz
+                </Button>
+              )}
             </Box>
           </form>
         </>
