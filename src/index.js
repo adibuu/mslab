@@ -2,7 +2,6 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const { limiter } = require("./config/rateLimits");
 const bcrypt = require("bcryptjs");
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 require("./db/db-connection");
@@ -47,7 +46,6 @@ app.use(adminjs.options.rootPath, routerAdminJS);
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
-app.use(limiter);
 app.use(dataRouter);
 
 app.listen(PORT, () =>
