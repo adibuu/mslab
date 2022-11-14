@@ -113,7 +113,10 @@ const DataAverage = () => {
         <>
           <form onSubmit={handleSubmitLKS(onSubmitLKS)}>
             <Box variant="card">
-              <Header>Oblicz wartość LKS</Header>
+              <Header>
+                LKS - Oblicz średnią z sześciu ostatnich okresów od wybranej
+                daty dla wybranego ML
+              </Header>
               <Text fontSize={"lg"} marginBottom="5px">
                 Data
               </Text>
@@ -188,7 +191,10 @@ const DataAverage = () => {
 
           <form onSubmit={handleSubmitOLD(onSubmitOLD)}>
             <Box variant="card" marginTop={"50px"}>
-              <Header>Oblicz wartość OLD</Header>
+              <Header>
+                OLD - Oblicz średnią z czterech ostatnich okresów od wybranej
+                daty dla wybranego ML
+              </Header>
               <Text fontSize={"lg"} marginBottom="5px">
                 Data
               </Text>
