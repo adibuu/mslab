@@ -67,6 +67,11 @@ const DataAverage = () => {
 
   const onSubmitLKS = async (data) => {
     try {
+      setAvarageLKS({
+        error: false,
+        success: null,
+      });
+
       const res = await axios.post(`${API_URL}/data/lks`, {
         date: data?.dateLKS,
         ml: data?.mlLKS?.ml,
@@ -87,6 +92,11 @@ const DataAverage = () => {
 
   const onSubmitOLD = async (data) => {
     try {
+      setAvarageOLD({
+        error: false,
+        success: null,
+      });
+
       const res = await axios.post(`${API_URL}/data/old`, {
         date: data?.dateOLD,
         ml: data?.mlOLD?.ml,
