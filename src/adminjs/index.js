@@ -62,7 +62,7 @@ const adminOptions = {
       },
     },
   ],
-  componentLoader,
+  componentLoader: componentLoader,
   branding: {
     companyName: "MSLAB",
     logo: null,
